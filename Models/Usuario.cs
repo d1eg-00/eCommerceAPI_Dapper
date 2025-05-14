@@ -20,5 +20,7 @@ namespace eCommerce.API.Models
         public Contato ?Contato { get; set; } // Relacionamento de um para um > Um usuário te um contato relacionado a ele
 
         public ICollection<EnderecoEntrega> ?EnderecosEntrega { get; set; } // Usuario pode ter varios enderecos de entrega >> Relacionamento
+
+        public ICollection<Departamento> ?Departamentos { get; set; }
     }
 }
