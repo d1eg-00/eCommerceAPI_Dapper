@@ -1,28 +1,35 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using eCommerce.API.Models;
+using Microsoft.Data.SqlClient;
+using Dapper;
 
 namespace eCommerce.API.Repositories
 {
     public class UsuarioRepository : IUsuarioRepository
     {
 
-        private static List<Usuario> _db = new List<Usuario>() //simulando db 
+        //Coneccao com db
+        private IDbConnection _connection;
+        public UsuarioRepository()
         {
-            new Usuario() {Id=1, Nome="Felipe Rodrigues", Email="felipe.rodrigues@gmail.com"},
-            new Usuario() {Id=2, Nome="Marcelo Rodrigues", Email="marcelo.rodrigues@gmail.com"},
-            new Usuario() {Id=3, Nome="Jessica Rodrigues", Email="Jessica.rodrigues@gmail.com"},
-        };
+            _connection = new SqlConnection(@"Data Source = (localdb)\MSSQLLocalDB; Initial Catalog = eCommerce; Integrated Security = True; Connect Timeout = 30; Encrypt = False; Trust Server Certificate = False; Application Intent = ReadWrite; Multi Subnet Failover = False");
+        }
+
+        //aplicando retorno de usuarios
+
         public List<Usuario> Get()
         {
-            return _db; //retorna todos usuarios
+            return _connection.Query<Usuario>("SELECT * FROM Usuarios").ToList(); //retorna todos usuarios utilizando comandos SQL
         }
 
         public Usuario ?Get(int id)
         {
-            return _db.FirstOrDefault(a => a.Id == id);
+            return _connection.QuerySingleOrDefault<Usuario>("SELECT * FROM Usuarios WHERE Id = @Id", new { Id = id });
+            //return _connection.QuerySingleOrDefault<Usuario>("SELECT Id, Nome, Email, Sexo, RG, CPF, NomeMae, SituacaoCadastro, DataCadastro FROM Usuarios WHERE Id = @Id", new { Id = id });
         }
 
         public void Insert(Usuario usuario)
@@ -52,5 +59,12 @@ namespace eCommerce.API.Repositories
         {
             _db.Remove(_db.FirstOrDefault(a => a.Id == id)!);
         }
+
+        private static List<Usuario> _db = new List<Usuario>() //simulando db 
+        {
+            new Usuario() {Id=1, Nome="Felipe Rodrigues", Email="felipe.rodrigues@gmail.com"},
+            new Usuario() {Id=2, Nome="Marcelo Rodrigues", Email="marcelo.rodrigues@gmail.com"},
+            new Usuario() {Id=3, Nome="Jessica Rodrigues", Email="Jessica.rodrigues@gmail.com"},
+        };
     }
 }
