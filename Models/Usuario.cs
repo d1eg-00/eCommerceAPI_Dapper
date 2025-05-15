@@ -21,6 +21,6 @@ namespace eCommerce.API.Models
 
         public ICollection<EnderecoEntrega> ?EnderecosEntrega { get; set; } // Usuario pode ter varios enderecos de entrega >> Relacionamento
 
-        public ICollection<Departamento> ?Departamentos { get; set; }
+        public ICollection<Departamento> ?Departamentos { get; set; } // ICollection retorna lista de departamento que usuario tem interesse
     }
 }
